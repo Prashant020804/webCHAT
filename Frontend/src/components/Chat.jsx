@@ -59,7 +59,7 @@ useEffect(()=>{
   getMessages()
  
  }
-},[slectedUser,user])
+},[slectedUser,user,messages])
 
 
 
