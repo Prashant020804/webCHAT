@@ -1,0 +1,26 @@
+body{
+    background-color: #F9FAFC;
+    
+   
+}
+
+input:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: #d1d5db; 
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.w-full.fixed {
+    z-index: 10; /* Ensures header is above content */
+    background-color: #f0f2f5; /* Consistent styling */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional for better visual */
+  }
+  .scroller::-webkit-scrollbar {
+    width: 6px;
+  }
+ 
