@@ -8,7 +8,7 @@ import { logout } from "../redux/fetaures/authSlice";
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { reomveSelectedUser, setSelectedUser } from "../redux/fetaures/userSlice";
-
+import { CiHome } from "react-icons/ci";
 
   
 
@@ -29,15 +29,23 @@ export const SideBar = () => {
   const nagitveLog = useNavigate()
 
   const [userdata, setuserdata] = useState([]);
+  const [search,setsearch] = useState('')
+ 
 
   
  
   // filter data in user
 
-  const useFilter = userdata.filter((usefilter)=> usefilter._id != user._id)
-  
+  const filteredUsers = userdata.filter((curuser) => curuser._id !== user._id) 
+  .filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
+
                  
-     
+     // searching filter 
+     const handlSearching = (value)=>{
+          setsearch(value)
+     }
+
+
  
 
   // get data in user
@@ -103,6 +111,8 @@ const hanldeUserSlect=(user)=>{
         {/* Search Bar */}
         <div className="mb-6 flex md:mt-0 mt-11">
           <input
+           value={search}
+          onChange={(event)=>handlSearching(event.target.value)}
             type="text"
             placeholder="Something search.."
             className="w-60 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -110,7 +120,7 @@ const hanldeUserSlect=(user)=>{
           
          {/* Dropdown list logout */}
 
-
+        
      
          <div className="relative font-[sans-serif] w-max mx-auto">
   <button
@@ -132,16 +142,11 @@ const hanldeUserSlect=(user)=>{
       isDropdownOpen ? "block" : "hidden"
     }`}
   >
-    <li className="py-2.5 px-5 flex items-center hover:bg-gray-100 text-[#333] text-sm cursor-pointer">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="currentColor"
-        className="w-4 h-4 mr-3"
-        viewBox="0 0 512 512"
-      >
-        <path d="..." />
-      </svg>
-      Dashboard
+    <li className="py-2.5 px-5 gap-[8px] flex items-center hover:bg-gray-100 text-[#333] text-sm cursor-pointer">
+     <button>
+     <CiHome />
+     </button>
+     Home
     </li>
     <li onClick={handlelogout} className="py-2.5 px-5 flex gap-[8px] items-center hover:bg-gray-100 text-[#333] text-sm cursor-pointer">
       <button className="text-8 text-blue-600/100">
@@ -167,25 +172,25 @@ const hanldeUserSlect=(user)=>{
           <ul className="space-y-6">
             {/* All user in data with the help of api */}
                
-            {userdata && useFilter.map((curuser) => (
-  <li key={curuser._id} onClick={()=>hanldeUserSlect(curuser)} className="flex items-center text-sm text-black hover:text-blue-500 cursor-pointer"
-  
+    {/* Render filtered user list */}
+{filteredUsers.map((curuser) => (
+  <li
+    key={curuser._id}
+    onClick={() => hanldeUserSlect(curuser)}
+    className="flex items-center text-sm text-black hover:text-blue-500 cursor-pointer"
   >
     <span className="relative inline-block mr-4">
       <img
         src={curuser.profile}
         className="ml-[13px] rounded-[50%] w-[50px] h-[50px] object-cover"
-        alt="profile" 
-        
+        alt="profile"
       />
       <span className="h-2.5 w-2.5 rounded-full bg-green-600 block absolute bottom-1 right-0"></span>
     </span>
     <span className="font-medium">{curuser.name}</span>
-    {/* <span className="bg-red-500 min-w-[20px] min-h-[20px] px-1 flex items-center justify-center text-white text-[11px] font-bold rounded-full ml-auto">
-      {curuser.message ? 1 : "3"}
-    </span> */}
   </li>
 ))}
+
 
            
 

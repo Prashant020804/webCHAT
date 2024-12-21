@@ -28,7 +28,7 @@ export const Chat = () => {
 
   const [messages,setMessages] = useState([]);
 
-console.log('messagesarryis',messages)
+
 
 
   
@@ -44,7 +44,7 @@ const getMessages = async()=>{
      const res=await axios.post(`${Baseurl}/api/messages/get_messages`,senderdata)
      const data = res.data;
      setMessages(data.data)
-     console.log("Getmessage",data)
+   
    
     
      
@@ -79,7 +79,7 @@ const handlemessaage = async()=>{
         const data = resp.data;
         
        
-            console.log("Message sent:", data);
+          
             inputvalue.current.value = "";
 
   } catch (error) {
