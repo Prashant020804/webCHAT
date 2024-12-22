@@ -87,6 +87,7 @@ export const SideBar = () => {
 const hanldeUserSlect=(user)=>{
   
  disptach(setSelectedUser(user))
+ setSidebarOpen(false);
  
 }
 
