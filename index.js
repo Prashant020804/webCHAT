@@ -48,20 +48,49 @@ const io = new Server(server, {
   },
 });
 
-// Handle Socket.IO connections
-io.on('connection', (socket) => {
-  console.log('A user connected:', socket.id);
 
-  // Listen for new messages
-  socket.on('sendMessage', (data) => {
-    io.emit('receiveMessage', data); // Broadcast the message to all clients
+ 
+let users=[]
+const Addusers=(userId,socketId)=>{
+  !users.some((user)=>user.userId===userId)&&
+  users.push({userId, socketId})
+}
+const ReomveUser=(socketId)=>{
+  users=users.filter((user)=>user.socketId!==socketId)
+}
+const GetUser=(userId)=>{
+  return users.find((user)=>user.userId===userId)
+}
+io.on('connection', (socket) => {
+  console.log('A user connected', socket.id);
+
+  // Add user to the list when connected
+  socket.on('AddUserSocket', (userId) => {
+    if (userId) {
+      Addusers(userId, socket.id);
+      io.emit('getUsers', users);
+      console.log('Current Users:', users);
+    }
   });
 
-  // Handle disconnection
+  // Handle message sending
+  socket.on('sendMessage', ({ messagedata }) => {
+    const { receiverId } = messagedata;
+    const targetUser = GetUser(receiverId); // Find the target user by ID
+
+    if (targetUser) {
+      io.to(targetUser.socketId).emit('receiveMessage', messagedata);
+    }
+  });
+
+  // Remove user from the list when disconnected
   socket.on('disconnect', () => {
     console.log('A user disconnected:', socket.id);
+    ReomveUser(socket.id);
+    io.emit('getUsers', users);
   });
 });
+
 
 // Start the server
 server.listen(PORT, () => {

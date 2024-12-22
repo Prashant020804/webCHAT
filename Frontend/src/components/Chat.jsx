@@ -15,17 +15,24 @@ export const Chat = () => {
 
   const inputvalue = useRef();
   const [messages, setMessages] = useState([]);
+  const [messagesend,setMessagesend]=useState(false)
   const [socket, setSocket] = useState(null); // State for socket connection
   const ScrollRef=useRef()
-
+console.log('socket',socket)
   // Initialize Socket.IO connection
   useEffect(() => {
-    const newSocket = io(Baseurl); // Replace with your backend URL
+    const newSocket = io(Baseurl); // Connect to the backend
     setSocket(newSocket);
-
+  
+    // Emit the userId to the server
+    if (user && user._id) {
+      newSocket.emit('AddUserSocket', user._id);
+    }
+  
     // Cleanup on component unmount
     return () => newSocket.close();
-  }, []);
+  }, [user]);
+  
 
   
   const getMessages = async () => {
@@ -47,7 +54,7 @@ export const Chat = () => {
     if (user && user._id && slectedUser && slectedUser._id) {
       getMessages();
     }
-  }, [slectedUser, user]);
+  }, [slectedUser, user,messagesend]);
 
   // Listen for incoming messages via Socket.IO
   useEffect(() => {
@@ -61,30 +68,30 @@ export const Chat = () => {
 
   // Handle sending a message
   const handlemessaage = async () => {
+    if (!slectedUser || !slectedUser._id) {
+      console.log('No user selected');
+      return;
+    }
+  
     try {
       const messagedata = {
         senderId: user._id,
         receiverId: slectedUser._id,
-        message: inputvalue.current.value, 
+        message: inputvalue.current.value,
       };
-      const SocketIoMessage=  {
-        userId: user._id,
-       
-        message: inputvalue.current.value, // with the help of useRef
-      };
-      // Emit the message to the server via Socket.IO
-      socket.emit('sendMessage', SocketIoMessage);
-
-      // Save the message in the database
+  
+      // Emit message via Socket.IO
+      socket.emit('sendMessage', { messagedata });
+  
+      // Save message to the database
       const resp = await axios.post(`${Baseurl}/api/messages/send_message`, messagedata);
-      const data = resp.data;
-
-      console.log('Message sent:', data);
+      setMessagesend((prev) => !prev);
       inputvalue.current.value = '';
     } catch (error) {
-      console.log(error);
+      console.log('Error sending message:', error);
     }
   };
+  
 
   if (!slectedUser) {
     return (

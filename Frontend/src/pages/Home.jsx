@@ -1,13 +1,16 @@
 import { useNavigate } from 'react-router-dom';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 
 import { SideBar } from '../components/SideBar'
 import { Chat } from '../components/Chat'
 import { useSelector } from 'react-redux';
+import { io } from 'socket.io-client';
+import { Baseurl } from '../../services api/baseurl';
 
 export default function Home() {
   const { user ,isAuthenticated} = useSelector((state) => state.auth);
+ 
   const navigate = useNavigate();
   
 
