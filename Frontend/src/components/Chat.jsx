@@ -16,6 +16,7 @@ export const Chat = () => {
   const inputvalue = useRef();
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null); // State for socket connection
+  const ScrollRef=useRef()
 
   // Initialize Socket.IO connection
   useEffect(() => {
@@ -64,7 +65,7 @@ export const Chat = () => {
       const messagedata = {
         senderId: user._id,
         receiverId: slectedUser._id,
-        message: inputvalue.current.value, // with the help of useRef
+        message: inputvalue.current.value, 
       };
       const SocketIoMessage=  {
         userId: user._id,
@@ -94,6 +95,13 @@ export const Chat = () => {
       </div>
     );
   }
+
+  useEffect(() => {
+    // Scroll to the last message whenever messages are updated
+    if (ScrollRef.current) {
+      ScrollRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
 
   return (
     <>
@@ -127,17 +135,17 @@ export const Chat = () => {
         </div>
 
         {/* Chat Messages */}
-        <div className="flex-1 relative mt-[65px]">
+        <div className="flex-1 relative mt-[65px]" >
           {messages &&
             Array.isArray(messages) &&
             messages.map((message) => (
-              <div key={message._id}>
+              <div key={message._id} ref={ScrollRef}>
                 <div
                   className={`${
                     message.userId === user._id ? 'chat chat-end ml-3' : 'chat chat-start'
                   }`}
                 >
-                  <div className="chat-bubble bg-green-200 text-black">{message.message}</div>
+                  <div className={`${message.userId===user._id ? 'chat-bubble bg-green-200 text-black':"chat-bubble bg-white text-black"}`}>{message.message}</div>
                 </div>
               </div>
             ))}
