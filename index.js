@@ -48,7 +48,20 @@ const io = new Server(server, {
   },
 });
 
+// // Handle Socket.IO connections
+// io.on('connection', (socket) => {
+//   console.log('A user connected:', socket.id);
 
+//   // Listen for new messages
+//   socket.on('sendMessage', (data) => {
+//     io.emit('receiveMessage', data); // Broadcast the message to all clients
+//   });
+
+//   // Handle disconnection
+//   socket.on('disconnect', () => {
+//     console.log('A user disconnected:', socket.id);
+//   });
+// });
  
 let users=[]
 const Addusers=(userId,socketId)=>{
@@ -61,37 +74,39 @@ const ReomveUser=(socketId)=>{
 const GetUser=(userId)=>{
   return users.find((user)=>user.userId===userId)
 }
-io.on('connection', (socket) => {
-  console.log('A user connected', socket.id);
+io.on('connection',(socket)=>{
+  // when connected
+  console.log('a user connected',socket.id)
+  socket.on('AddUserSocket',(userId)=>{
+    console.log('userid',userId)
+    Addusers(userId, socket.id)
+    io.emit('getUsers', users)
+    console.log('usersfromscoket',users)
 
-  // Add user to the list when connected
-  socket.on('AddUserSocket', (userId) => {
-    if (userId) {
-      Addusers(userId, socket.id);
-      io.emit('getUsers', users);
-      console.log('Current Users:', users);
-    }
-  });
-
-  // Handle message sending
-  socket.on('sendMessage', ({ messagedata }) => {
-    const { receiverId } = messagedata;
-    const targetUser = GetUser(receiverId); // Find the target user by ID
-
-    if (targetUser) {
-      io.to(targetUser.socketId).emit('receiveMessage', messagedata);
-    }
-  });
-
-  // Remove user from the list when disconnected
-  socket.on('disconnect', () => {
-    console.log('A user disconnected:', socket.id);
-    ReomveUser(socket.id);
-    io.emit('getUsers', users);
-  });
+  })
+// message
+socket.on('sendMessage', (data) => {
+  const { senderId, receiverId, message } = data.messagedata;
+  const user = GetUser(receiverId);
+  if (user?.socketId) {
+    io.to(user.socketId).emit('receiveMessage', {
+      userId: senderId,
+      message,
+    });
+  } else {
+    console.log('Receiver not connected');
+  }
+  console.log('messagedata', data);
 });
 
-
+  // when desction
+  socket.on('disconnect',()=>{
+    console.log('a user disconnected')
+    ReomveUser(socket.id)
+    io.emit('getUsers', users)
+    console.log(users)
+  })
+})
 // Start the server
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT} in ${NODE_ENV} mode`);
