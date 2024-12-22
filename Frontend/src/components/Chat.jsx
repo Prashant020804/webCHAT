@@ -18,7 +18,7 @@ export const Chat = () => {
   const [messagesend,setMessagesend]=useState(false)
   const [socket, setSocket] = useState(null); // State for socket connection
   const ScrollRef=useRef()
-console.log('socket',socket)
+  console.log('socket',socket)
   // Initialize Socket.IO connection
   useEffect(() => {
     const newSocket = io(Baseurl); // Connect to the backend

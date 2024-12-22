@@ -17,7 +17,7 @@ export default function Login() {
              email: "",
             password:''
    })
-   console.log('userlogin',userlogin)
+  
   
 
    // handle userlogin data 
