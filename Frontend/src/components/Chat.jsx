@@ -7,30 +7,19 @@ import { IoIosSend } from 'react-icons/io';
 import { CiSearch } from 'react-icons/ci';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { IoIosVideocam } from 'react-icons/io';
-import { io } from 'socket.io-client'; // Import socket.io-client
 
-export const Chat = () => {
+
+export const Chat = ({socket}) => {
   const { slectedUser } = useSelector((state) => state.user);
   const { user } = useSelector((state) => state.auth);
 
   const [messages, setMessages] = useState([]);
   const [messagesend, setMessagesend] = useState(false);
-  const [socket, setSocket] = useState(null); // State for socket connection
+  
   const ScrollRef = useRef();
   const inputvalue = useRef();
 
-  useEffect(() => {
-    const newSocket = io(Baseurl); // Connect to the backend
-    setSocket(newSocket);
 
-    // Emit the userId to the server
-    if (user && user._id) {
-      newSocket.emit('AddUserSocket', user._id);
-    }
-
-    // Cleanup on component unmount
-    return () => newSocket.close();
-  }, [user]);
 
   const getMessages = async () => {
     if (!user || !slectedUser) return;
