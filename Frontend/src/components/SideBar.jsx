@@ -188,7 +188,7 @@ const hanldeUserSlect=(user)=>{
         className="ml-[13px] rounded-[50%] w-[50px] h-[50px] object-cover"
         alt="profile"
       />
-      <span className="h-2.5 w-2.5 rounded-full bg-green-600 block absolute bottom-1 right-0"></span>
+      {/* <span className="h-2.5 w-2.5 rounded-full bg-green-600 block absolute bottom-1 right-0"></span> */}
     </span>
     <span className="font-medium">{curuser.name}</span>
   </li>
