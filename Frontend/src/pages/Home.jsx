@@ -10,11 +10,23 @@ import { Baseurl } from '../../services api/baseurl';
 
 export default function Home() {
   const { user ,isAuthenticated} = useSelector((state) => state.auth);
+  const [socket, setSocket] = useState(null); // State for socket connection
  
   const navigate = useNavigate();
-  
-
   useEffect(() => {
+    const newSocket = io(Baseurl); // Connect to the backend
+    setSocket(newSocket);
+
+    // Emit the userId to the server
+    if (user && user._id) {
+      newSocket.emit('AddUserSocket', user._id);
+    }
+
+    // Cleanup on component unmount
+    return () => newSocket.close();
+  }, [user]);
+
+  useEffect(() => { 
     if (!isAuthenticated) {
       navigate('/login');
     }
@@ -27,7 +39,7 @@ export default function Home() {
           className="basis-[25%] h-[100vh] md:bg-[#FFFFFF]  bg-[#FFFFFF] overflow-y-auto "
           
         >
-          <SideBar />
+          <SideBar socket={socket}/>
         </div>
 
         {/* Chat Section */}
@@ -35,7 +47,7 @@ export default function Home() {
           className="basis-[75%] h-[100vh] overflow-y-auto"
          
         >
-          <Chat />
+          <Chat  socket={socket}/>
         </div>
       </div>
     </section>

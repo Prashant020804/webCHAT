@@ -12,7 +12,7 @@ import { CiHome } from "react-icons/ci";
 
   
 
-export const SideBar = () => {
+export const SideBar = ({socket}) => {
 
 
 
@@ -77,6 +77,10 @@ export const SideBar = () => {
 
   const handlelogout = ()=>{
   disptach(logout())
+  if (socket) {
+    
+    socket.disconnect(); 
+  }
   disptach(reomveSelectedUser())
     nagitveLog('/login')
   }
