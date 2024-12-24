@@ -36,7 +36,7 @@ export const SideBar = ({socket}) => {
  
   // filter data in user
 
-  const filteredUsers = userdata.filter((curuser) => curuser._id !== user._id) 
+  const filteredUsers = userdata && userdata.filter((curuser) => curuser._id !== user._id) 
   .filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
 
                  
@@ -179,7 +179,7 @@ const hanldeUserSlect=(user)=>{
             {/* All user in data with the help of api */}
                
     {/* Render filtered user list */}
-{filteredUsers.map((curuser) => (
+{ filteredUsers && filteredUsers.map((curuser) => (
   <li
     key={curuser._id}
     onClick={() => hanldeUserSlect(curuser)}

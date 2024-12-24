@@ -46,12 +46,20 @@ export const Chat = ({socket}) => {
 
   useEffect(() => {
     if (socket) {
+      socket.off('receiveMessage');
       socket.on('receiveMessage', (newMessage) => {
-        console.log('messagefromsocket.io', newMessage);
-        setMessages((prevMessages) => [...prevMessages, newMessage]); // Add the new message to the state
+        console.log('message from socket.io', newMessage);
+         console.log('SelectedUserformsocket',slectedUser._id)
+         console.log('SelectedUsermessageid',newMessage.userId)
+        if (newMessage.userId === slectedUser?._id) {
+          setMessages((prevMessages) => [...prevMessages, newMessage]);
+        } else {
+          console.log('Message not for the selected user, ignoring...');
+        }
       });
     }
-  }, [socket]);
+  }, [socket, slectedUser]);
+  
 
   const handlemessaage = async () => {
     if (!slectedUser || !slectedUser._id) {

@@ -48,20 +48,7 @@ const io = new Server(server, {
   },
 });
 
-// // Handle Socket.IO connections
-// io.on('connection', (socket) => {
-//   console.log('A user connected:', socket.id);
 
-//   // Listen for new messages
-//   socket.on('sendMessage', (data) => {
-//     io.emit('receiveMessage', data); // Broadcast the message to all clients
-//   });
-
-//   // Handle disconnection
-//   socket.on('disconnect', () => {
-//     console.log('A user disconnected:', socket.id);
-//   });
-// });
  
 let users=[]
 const Addusers=(userId,socketId)=>{
@@ -87,7 +74,9 @@ io.on('connection',(socket)=>{
 // message
 socket.on('sendMessage', (data) => {
   const { senderId, receiverId, message } = data.messagedata;
+  console.log('revierId',receiverId)
   const user = GetUser(receiverId);
+  console.log('senderUser',user)
   if (user?.socketId) {
     io.to(user.socketId).emit('receiveMessage', {
       userId: senderId,
