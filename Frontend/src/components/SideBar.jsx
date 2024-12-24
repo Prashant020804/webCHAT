@@ -91,6 +91,7 @@ export const SideBar = ({socket}) => {
 const hanldeUserSlect=(user)=>{
   
  disptach(setSelectedUser(user))
+ setSidebarOpen(false);
  
 }
 
@@ -100,7 +101,7 @@ const hanldeUserSlect=(user)=>{
     <>
       {/* Toggle Button */}
       <button
-        className="md:hidden fixed top-4 left-0 text-[9px] z-50 p-2 bg-blue-500 text-white rounded-lg"
+        className="md:hidden fixed top-4 left-0 text-[12px] z-50 p-2  bg-[#F0F2F5] text-black rounded-lg"
         onClick={toggleSidebar}
       >
         <FaBars />
