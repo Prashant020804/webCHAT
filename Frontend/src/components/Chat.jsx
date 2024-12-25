@@ -116,8 +116,8 @@ export const Chat = ({socket}) => {
                 className="ml-[13px] rounded-[50%] w-[50px] h-[50px] object-cover"
               />
               <div>
-                <h3>{slectedUser.name}</h3>
-                <span className="flex">online</span>
+                <h3 className='text-[20px]'>{slectedUser.name}</h3>
+                {/* <span className="flex">online</span> */}
               </div>
             </div>
             <div className="flex gap-[15px] flex-shrink-0">
