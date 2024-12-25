@@ -81,7 +81,8 @@ export const Chat = ({socket}) => {
         message:inputvalue.current.value,
         time:Date.now()
       }
-      setMessages((prevMessages) => [...prevMessages, UpdateMessage]);
+      setMessages((prevMessages) => (Array.isArray(prevMessages) ? [...prevMessages, UpdateMessage] : [UpdateMessage]));
+
       // Save message to the database
       await axios.post(`${Baseurl}/api/messages/send_message`, messagedata);
       // setMessagesend((prev) => !prev);
